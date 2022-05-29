@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model test {
+  id   Int    @id
+  key  String
+  key2 String
+}
+
+model user {
+  id          Int     @id @default(autoincrement())
+  student_id  String     @unique(map: "user_student_id_unique_constraint")
+  full_name   String
+  email       String  @unique(map: "user_email_unique_constraint")
+  password    String
+  class       String
+  departement String
+  role_id     Int
+  role        role    @relation(fields: [role_id], references: [id], onDelete: SetNull, onUpdate: Cascade)
+  is_chosen   Boolean
+}
+
+model role {
+  id        Int     @id @default(autoincrement())
+  role_name String?
+  user      user[]
+}
